@@ -4,6 +4,7 @@ struct SettingsView: View {
     @State private var data = DataManager.shared.load()
     @State private var showingAddPreset = false
     @State private var newEmoji = ""
+    @State private var newLabel = ""
     @State private var newCost = ""
 
     var body: some View {
@@ -33,6 +34,10 @@ struct SettingsView: View {
                     HStack {
                         Text(preset.emoji)
                             .font(.title2)
+                        if !preset.label.isEmpty {
+                            Text(preset.label)
+                                .foregroundStyle(.primary)
+                        }
                         Spacer()
                         Text("\(preset.cost) pts")
                             .foregroundStyle(.secondary)
@@ -83,6 +88,7 @@ struct SettingsView: View {
         .sheet(isPresented: $showingAddPreset) {
             AddPresetSheet(
                 emoji: $newEmoji,
+                label: $newLabel,
                 cost: $newCost,
                 onSave: addPreset,
                 onCancel: { showingAddPreset = false }
@@ -111,10 +117,11 @@ struct SettingsView: View {
 
     private func addPreset() {
         guard !newEmoji.isEmpty, let cost = Int(newCost), cost > 0 else { return }
-        let preset = Redemption(emoji: String(newEmoji.prefix(2)), cost: cost)
+        let preset = Redemption(emoji: String(newEmoji.prefix(2)), label: newLabel, cost: cost)
         data.redemptionPresets.append(preset)
         DataManager.shared.save(data)
         newEmoji = ""
+        newLabel = ""
         newCost = ""
         showingAddPreset = false
     }
@@ -137,6 +144,7 @@ struct SettingsView: View {
 
 struct AddPresetSheet: View {
     @Binding var emoji: String
+    @Binding var label: String
     @Binding var cost: String
     let onSave: () -> Void
     let onCancel: () -> Void
@@ -151,6 +159,12 @@ struct AddPresetSheet: View {
                 Section {
                     TextField("Emoji", text: $emoji)
                         .font(.largeTitle)
+                    TextField("Label (optional, 8 chars max)", text: $label)
+                        .onChange(of: label) { _, newValue in
+                            if newValue.count > 8 {
+                                label = String(newValue.prefix(8))
+                            }
+                        }
                     TextField("Cost (points)", text: $cost)
                         .keyboardType(.numberPad)
                 }

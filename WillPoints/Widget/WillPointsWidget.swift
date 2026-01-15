@@ -72,12 +72,19 @@ struct WillPointsWidgetView: View {
                 HStack(spacing: 0) {
                     // Preset - tap to cycle
                     Button(intent: CyclePresetIntent()) {
-                        VStack(spacing: 2) {
+                        VStack(spacing: 1) {
                             if let preset = entry.data.currentPreset {
-                                Text(preset.emoji)
-                                    .font(.system(size: 24))
+                                HStack(spacing: 2) {
+                                    Text(preset.emoji)
+                                        .font(.system(size: 20))
+                                    if !preset.label.isEmpty {
+                                        Text(preset.label)
+                                            .font(.system(size: 11, weight: .medium))
+                                            .lineLimit(1)
+                                    }
+                                }
                                 Text("\(preset.cost)")
-                                    .font(.system(size: 12, weight: .medium))
+                                    .font(.system(size: 11, weight: .medium))
                                     .foregroundStyle(.secondary)
                             } else {
                                 Text("--")

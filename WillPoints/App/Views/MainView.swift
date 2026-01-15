@@ -46,10 +46,16 @@ struct MainView: View {
                 HStack(spacing: 0) {
                     // Preset display - tap to cycle
                     Button(action: cyclePreset) {
-                        VStack(spacing: 8) {
+                        VStack(spacing: 4) {
                             if let preset = data.currentPreset {
-                                Text(preset.emoji)
-                                    .font(.system(size: 48))
+                                HStack(spacing: 4) {
+                                    Text(preset.emoji)
+                                        .font(.system(size: 40))
+                                    if !preset.label.isEmpty {
+                                        Text(preset.label)
+                                            .font(.system(size: 20, weight: .medium))
+                                    }
+                                }
                                 Text("\(preset.cost) pts")
                                     .font(.headline)
                                     .foregroundStyle(.secondary)
