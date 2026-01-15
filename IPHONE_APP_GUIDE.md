@@ -460,11 +460,8 @@ Since you named your repo "Tractor," here are some simple app ideas:
 
 ---
 
-## Next Steps for This Repo
+## What We Built: WillPoints
 
-1. Decide what Tractor will do (one sentence)
-2. Set up Xcode and create a new SwiftUI project
-3. Add the Xcode project to this repo
-4. Start building!
+The first app in this repo is **WillPoints** — a personal "will points" tracking system with a home screen widget.
 
-Would you like help with any of these steps?
+See `/WillPoints/SETUP.md` for how to set it up in Xcode.
