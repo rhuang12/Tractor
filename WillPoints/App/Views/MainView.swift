@@ -86,7 +86,27 @@ struct MainView: View {
 
                 Divider()
 
-                Spacer()
+                // Challenges section
+                if !data.challenges.isEmpty {
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(data.challenges) { challenge in
+                                ChallengeRow(challenge: challenge) {
+                                    lapse(challengeId: challenge.id)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                } else {
+                    Spacer()
+                    Text("No challenges yet")
+                        .foregroundStyle(.secondary)
+                    Text("Add challenges in Settings")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                    Spacer()
+                }
             }
             .navigationTitle("Will Points")
             .toolbar {
@@ -126,6 +146,54 @@ struct MainView: View {
         if data.redeem() {
             DataManager.shared.save(data)
         }
+    }
+
+    private func lapse(challengeId: UUID) {
+        _ = data.lapse(challengeId: challengeId)
+        DataManager.shared.save(data)
+    }
+}
+
+struct ChallengeRow: View {
+    let challenge: Challenge
+    let onLapse: () -> Void
+
+    var body: some View {
+        HStack {
+            // Challenge info
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
+                    Text(challenge.emoji)
+                        .font(.title2)
+                    Text(challenge.name)
+                        .font(.headline)
+                }
+                HStack(spacing: 4) {
+                    Text(challenge.streakDisplay)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Text("→ +\(challenge.currentBonus) pts")
+                        .font(.subheadline)
+                        .foregroundStyle(.green)
+                }
+            }
+
+            Spacer()
+
+            // Lapse button
+            Button(action: onLapse) {
+                Text("I lapsed")
+                    .font(.subheadline.weight(.medium))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.blue.opacity(0.2))
+                    .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
     }
 }
 

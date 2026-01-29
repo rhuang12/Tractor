@@ -31,12 +31,12 @@ struct TransactionRow: View {
         HStack {
             // Icon/emoji
             Group {
-                if transaction.type == .redeem, let emoji = transaction.note {
-                    Text(emoji)
+                if let note = transaction.note, (transaction.type == .redeem || transaction.type == .lapse) {
+                    Text(String(note.prefix(2)))  // Get just the emoji
                         .font(.title2)
                 } else {
-                    Image(systemName: transaction.type == .add ? "plus.circle.fill" : "minus.circle.fill")
-                        .foregroundStyle(transaction.type == .add ? .green : .orange)
+                    Image(systemName: iconName)
+                        .foregroundStyle(iconColor)
                         .font(.title2)
                 }
             }
@@ -44,8 +44,13 @@ struct TransactionRow: View {
 
             // Details
             VStack(alignment: .leading, spacing: 2) {
-                Text(transaction.type == .add ? "Added" : "Redeemed")
+                Text(titleText)
                     .font(.headline)
+                if transaction.type == .lapse, let note = transaction.note {
+                    Text(note)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
                 Text(transaction.timestamp, style: .relative)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -54,11 +59,50 @@ struct TransactionRow: View {
             Spacer()
 
             // Amount
-            Text(transaction.type == .add ? "+\(transaction.amount)" : "-\(transaction.amount)")
+            Text(amountText)
                 .font(.system(.title3, design: .rounded, weight: .semibold))
-                .foregroundStyle(transaction.type == .add ? .green : .orange)
+                .foregroundStyle(amountColor)
         }
         .padding(.vertical, 4)
+    }
+
+    private var iconName: String {
+        switch transaction.type {
+        case .add: return "plus.circle.fill"
+        case .redeem: return "minus.circle.fill"
+        case .lapse: return "arrow.counterclockwise.circle.fill"
+        }
+    }
+
+    private var iconColor: Color {
+        switch transaction.type {
+        case .add: return .green
+        case .redeem: return .orange
+        case .lapse: return .blue
+        }
+    }
+
+    private var titleText: String {
+        switch transaction.type {
+        case .add: return "Added"
+        case .redeem: return "Redeemed"
+        case .lapse: return "Lapsed"
+        }
+    }
+
+    private var amountText: String {
+        switch transaction.type {
+        case .add, .lapse: return "+\(transaction.amount)"
+        case .redeem: return "-\(transaction.amount)"
+        }
+    }
+
+    private var amountColor: Color {
+        switch transaction.type {
+        case .add: return .green
+        case .redeem: return .orange
+        case .lapse: return .blue
+        }
     }
 }
 

@@ -14,9 +14,9 @@ struct Redemption: Codable, Identifiable, Equatable {
     }
 
     static let defaults: [Redemption] = [
-        Redemption(emoji: "🤷", label: "zen", cost: 1),
-        Redemption(emoji: "🍪", label: "snack", cost: 5),
-        Redemption(emoji: "🍷", label: "wine", cost: 10),
-        Redemption(emoji: "🫠", label: "release", cost: 20)
+        Redemption(emoji: "🤷", label: "zen", cost: 3),
+        Redemption(emoji: "🍪", label: "snack", cost: 15),
+        Redemption(emoji: "🍷", label: "wine", cost: 30),
+        Redemption(emoji: "🫠", label: "release", cost: 60)
     ]
 }

@@ -4,6 +4,7 @@ struct Transaction: Codable, Identifiable {
     enum TransactionType: String, Codable {
         case add
         case redeem
+        case lapse  // Points earned from lapsing on a challenge
     }
 
     var id: UUID
